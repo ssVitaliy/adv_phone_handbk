@@ -71,6 +71,8 @@ def create_record(*args: str) -> str:
     pass
 
 
+def save_record(data) -> None:
+    pass
 
 
 if __name__ == "__main__":
