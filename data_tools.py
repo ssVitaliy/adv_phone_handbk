@@ -68,7 +68,11 @@ def valid_user_command(prompt: str, options: tuple[str]) -> str:
 
 
 def create_record(*args: str) -> str:
-    pass
+    """Возвращает строку, составленную из аргументов (args), разделённых ';'
+    и добавляет '\n' в конец строки    
+    """
+
+    return ';'.join(args) + '\n'
 
 
 def save_record(data) -> None:
