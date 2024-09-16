@@ -47,6 +47,31 @@ def command_prompt(commands: dict[int, str]) -> int:
         print('\nНеверный ввод\n')
 
 
+def get_user_data(prompt: str) -> str:
+    pass
+
+
+def valid_user_command(prompt: str, options: tuple[str]) -> str:
+    """Выводит запрос (prompt) и принимает ответ от пользователя.
+    Если ответ имеется в кортеже доступных вариантов (options) - возвращает ответ.
+    Если нет - выводит подсказку и повторяет запрос.
+    
+    Возвращает валидный ответ.
+    """
+
+    while True:
+        answer = input(prompt).lower()
+        if answer in options:
+            return answer
+        else:
+            print('Неверный ввод')
+
+
+def create_record(*args: str) -> str:
+    pass
+
+
+
+
 if __name__ == "__main__":
-    print_title('kjlkjkllkjlkb', style=1)
-    print_title('kjlkjkllkjlkb', style=2)
+    valid_user_command('Сохранить? [y/n]: ', ('y', 'n'))
