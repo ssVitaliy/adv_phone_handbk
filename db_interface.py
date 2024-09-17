@@ -35,3 +35,11 @@ def db_append(data: str) -> None:
     with open(DB_FILE_NAME, 'a', encoding=DB_ENCODING) as f:
         f.write(data)
     return
+
+
+def db_write_all(data: str) -> None:
+    """Перезаписывает данными (data) весь файл"""
+
+    with open(DB_FILE_NAME, 'w', encoding=DB_ENCODING) as f:
+        f.write(data)
+    return

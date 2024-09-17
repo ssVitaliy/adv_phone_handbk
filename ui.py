@@ -1,6 +1,14 @@
 from db_interface import read_db
-from data_tools import (print_title, command_prompt, get_user_data, 
-                        create_record, valid_user_command, save_record, find_records)
+from data_tools import (
+                    print_title,
+                    command_prompt,
+                    get_user_data,
+                    create_record,
+                    valid_user_command,
+                    save_record,
+                    save_all_records,
+                    find_records,
+                    )
 
 
 def ui() -> None:
@@ -92,7 +100,7 @@ def add_menu():
     phone = get_user_data('Введите телефон: ')
 
     record = create_record(name, surname, last_name, phone)
-    print(f'Запись "{record.strip()}" создана.')
+    print(f'\nЗапись "{record.strip()}" создана.')
     if valid_user_command('Сохранить? [y/n]: ', ('y', 'n')) == 'y':
         save_record(record)
         print('Запись добавлена в справочник.')
@@ -135,6 +143,45 @@ def edit_menu():
     Выводит найденные записи.
     """
 
+    print_title('Редактирование', style=2)
+    records = read_db()
+    if not records:
+        print('Справочник пуст, нечего редактировать.', '\n')
+    else:
+        print_title('Поиск нужной записи', style=1)
+        search_request = get_user_data('Введите имя или фамилию: ')
+        search_result = find_records(records, search_request)
+
+        if not search_result:
+            print(f'Записи по запросу "{search_request}" не найдены')
+        else:
+            rec_index = None
+            if len(search_result) == 1:
+                rec_index = search_result[0]
+            elif len(search_result) > 1:
+                print_title('Найдены несколько записей:', style=1)
+                for index in search_result:
+                    print(f'  {index + 1}: {records[index]}', end='')
+                rec_index = valid_user_command('\nВведите номер нужной: ', tuple([str(i + 1) for i in search_result]))
+                rec_index = int(rec_index) - 1
+            
+            # rec_index содержит индекс изменяемой записи
+            print_title('Изменяем запись:', style=1)
+            print(records[rec_index])
+            name = get_user_data('Введите новое имя: ')
+            surname = get_user_data('Введите новую фамилию: ')
+            last_name = get_user_data('Введите новое отчество: ')
+            phone = get_user_data('Введите новый телефон: ')
+
+            new_record = create_record(name, surname, last_name, phone)
+            print(f'\nЗапись "{new_record.strip()}" создана.')
+            if valid_user_command('Сохранить? [y/n]: ', ('y', 'n')) == 'y':
+                records[rec_index] = new_record
+                save_all_records(records)
+                print('Запись сохранена.')
+            else:
+                print('Запись не сохранена.')
+
     input('Для продолжения нажмите Enter...')
 
 
@@ -143,4 +190,4 @@ def delete_menu():
 
 
 if __name__ == "__main__":
-    ui()
+    edit_menu()

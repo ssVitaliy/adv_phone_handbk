@@ -1,4 +1,4 @@
-from db_interface import db_append, read_db
+from db_interface import db_append, read_db, db_write_all
 
 
 def print_title(title: str, style: int = 1) -> None:
@@ -96,6 +96,13 @@ def save_record(record: str) -> None:
     """Добавляет запись в справочник"""
 
     db_append(record)
+    return
+
+
+def save_all_records(records: list) -> None:
+    """Преобразует список записей в текстовую строку и перезаписывает весь справочник"""
+    
+    db_write_all(''.join(records))
     return
 
 
