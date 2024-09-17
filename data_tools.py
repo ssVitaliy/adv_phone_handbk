@@ -48,7 +48,25 @@ def command_prompt(commands: dict[int, str]) -> int:
 
 
 def get_user_data(prompt: str) -> str:
-    pass
+    """Печатает запрос (prompt) и проверяет ввод пользователя.
+    
+    Если пользователь ввел пустую строку или в ней присутствует символ ';'
+    выводит подсказку и повторяет запрос.
+
+    Возвращает валидную строку.
+    """
+
+    while True:
+        user_input = input(prompt)
+        if not user_input:
+            print('Строка не может быть пустой')
+        elif ';' in user_input:
+            print('Строка не может содержать символ ";"')
+        else:
+            return user_input
+
+
+
 
 
 def valid_user_command(prompt: str, options: tuple[str]) -> str:
@@ -80,4 +98,4 @@ def save_record(data) -> None:
 
 
 if __name__ == "__main__":
-    valid_user_command('Сохранить? [y/n]: ', ('y', 'n'))
+    pass
