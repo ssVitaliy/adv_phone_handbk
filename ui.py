@@ -186,6 +186,45 @@ def edit_menu():
 
 
 def delete_menu():
+    """Меню удаления записей.
+
+    Запрашивает ввод строки (имя или фамилию) и выполняет поиск по имени или фамилии.
+        Если найдены несколько записей - запрашивает ввести номер и переходит к удалению.
+        Если найдена только одна запись - переходит к удалению.
+        Если записи по запросу не найдены - выводит сообщение 'Записи по запросу не найдены'
+    Спрашивает пользователя подтверждение на удаление. Если ответ да - удаляет.
+    """
+
+    print_title('Удаление записи', style=2)
+    records = read_db()
+    if not records:
+        print('Справочник пуст, нечего редактировать.', '\n')
+    else:
+        print_title('Поиск нужной записи', style=1)
+        search_request = get_user_data('Введите имя или фамилию: ')
+        search_result = find_records(records, search_request)
+
+        if not search_result:
+            print(f'Записи по запросу "{search_request}" не найдены')
+        else:
+            rec_index = None
+            if len(search_result) == 1:
+                rec_index = search_result[0]
+            elif len(search_result) > 1:
+                print_title('Найдены несколько записей:', style=1)
+                for index in search_result:
+                    print(f'  {index + 1}: {records[index]}', end='')
+                rec_index = valid_user_command('\nВведите номер нужной: ', tuple([str(i + 1) for i in search_result]))
+                rec_index = int(rec_index) - 1
+            
+            # rec_index содержит индекс найденой записи
+            if valid_user_command(f'\nУдалить запись "{records[rec_index].strip()}"? [y/n]: ', ('y', 'n')) == 'y':
+                deleted_record = records.pop(rec_index)
+                save_all_records(records)
+                print(f'Запись "{deleted_record.strip()}" удалена из справочника.')
+            else:
+                print('Удаление отменено.')
+
     input('Для продолжения нажмите Enter...')
 
 
