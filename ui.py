@@ -86,7 +86,7 @@ def add_menu():
 
     record = create_record(name, surname, last_name, phone)
     print(f'Запись "{record.strip()}" создана.')
-    if valid_user_command('Сохранить? [y/n]: ', ('y', 'n')):
+    if valid_user_command('Сохранить? [y/n]: ', ('y', 'n')) == 'y':
         save_record(record)
         print('Запись добавлена в справочник.')
     else:

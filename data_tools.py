@@ -1,4 +1,4 @@
-
+from db_interface import db_append
 
 def print_title(title: str, style: int = 1) -> None:
     """Печатает заголовок title с обрамлением.
@@ -93,8 +93,11 @@ def create_record(*args: str) -> str:
     return ';'.join(args) + '\n'
 
 
-def save_record(data) -> None:
-    pass
+def save_record(record: str) -> None:
+    """Добавляет запись в справочник"""
+    db_append(record)
+    return
+
 
 
 if __name__ == "__main__":
