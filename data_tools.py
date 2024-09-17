@@ -1,4 +1,5 @@
-from db_interface import db_append
+from db_interface import db_append, read_db
+
 
 def print_title(title: str, style: int = 1) -> None:
     """Печатает заголовок title с обрамлением.
@@ -8,22 +9,23 @@ def print_title(title: str, style: int = 1) -> None:
         style 1
         -------
 
-        =======
         style 2
         =======
 
-        *******
         style 3
         *******
     """
 
-    if style == 1:
-        print(f'\n{title}\n{"-" * len(title)}')
-    elif style == 2:
-        print(f'{"=" * len(title)}\n{title}\n{"=" * len(title)}')
-    elif style == 3:
-        print(f'{"*" * len(title)}\n{title}\n{"*" * len(title)}')
+    style_symbol = ' '
 
+    if style == 1:
+        style_symbol = '-'
+    elif style == 2:
+        style_symbol = '='
+    elif style == 3:
+        style_symbol = '*'
+
+    print(f'\n{title}\n{style_symbol * len(title)}')
 
 
 def command_prompt(commands: dict[int, str]) -> int:
@@ -66,9 +68,6 @@ def get_user_data(prompt: str) -> str:
             return user_input
 
 
-
-
-
 def valid_user_command(prompt: str, options: tuple[str]) -> str:
     """Выводит запрос (prompt) и принимает ответ от пользователя.
     Если ответ имеется в кортеже доступных вариантов (options) - возвращает ответ.
@@ -95,9 +94,26 @@ def create_record(*args: str) -> str:
 
 def save_record(record: str) -> None:
     """Добавляет запись в справочник"""
+
     db_append(record)
     return
 
+
+def find_records(records: list[str], search_request: str) -> list[int]:
+    """Ищет в списке (records) записи, поля имя или фамилия которых
+    равны строке поиска (search_request). К регистру строк нечувствителен.
+
+    Возвращает список индексов.
+    """
+
+    search_request = search_request.lower()
+    records = read_db()
+    found_records = []
+    for index, record in enumerate(records):
+        name, surname, *_ = record.split(';')
+        if search_request in (name.lower(), surname.lower()):
+            found_records.append(index)
+    return found_records
 
 
 if __name__ == "__main__":

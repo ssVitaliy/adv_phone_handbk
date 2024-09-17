@@ -1,5 +1,7 @@
-from data_tools import print_title, command_prompt, get_user_data, create_record, valid_user_command, save_record
 from db_interface import read_db
+from data_tools import (print_title, command_prompt, get_user_data, 
+                        create_record, valid_user_command, save_record, find_records)
+
 
 def ui() -> None:
     """Интерфейс пользователя. Навигация по меню.
@@ -16,11 +18,13 @@ def ui() -> None:
         elif cmd == 2:
             add_menu()
         elif cmd == 3:
-            edit_menu()
+            search_menu()
         elif cmd == 4:
+            edit_menu()
+        elif cmd == 5:
             delete_menu()
 
-        if cmd == 5:
+        if cmd == 6:
             break
 
     print_title('До встречи ;)')
@@ -32,9 +36,10 @@ def main_menu() -> int:
     Список команд
         1: чтение всех записей
         2: добавление записи
-        3: редактирование записи
-        4: удаление записи
-        5: выход
+        3: поиск записи
+        4: редактирование записи
+        5: удаление записи
+        6: выход
 
     Возвращает:
         (int) валидный номер выбранной команды.
@@ -43,9 +48,10 @@ def main_menu() -> int:
     commands = {
         1: 'чтение всех записей',
         2: 'добавление записи',
-        3: 'редактирование записи',
-        4: 'удаление записи',
-        5: 'выход',
+        3: 'поиск записи',
+        4: 'редактирование записи',
+        5: 'удаление записи',
+        6: 'выход',
     }
     
     print_title('Главное меню справочника', style=3)
@@ -67,12 +73,13 @@ def show_menu():
         print('Количество записей:', len(records), '\n')
     else:
         print('Справочник пуст', '\n')
+    input('Для продолжения нажмите Enter...')
 
 
 def add_menu():
     """Раздел меню 'Добавление записи'
 
-    Принимает данные валидные от пользователя (имя, фамилию, отчество, телефон).
+    Принимает валидные данные от пользователя (имя, фамилию, отчество, телефон).
     Отображает отформатированную запись.
     Спрашивает сохранить или нет. Если да - сохраняет.
     """
@@ -91,15 +98,39 @@ def add_menu():
         print('Запись добавлена в справочник.')
     else:
         print('Запись не сохранена.')
+    input('Для продолжения нажмите Enter...')
 
 
+def search_menu():
+    """Меню поиска записей по имени или фамилии.
+
+    Запрашивает ввод строки (имя или фамилию) и выполняет поиск.
+    Выводит найденные записи или сообщение 'Записи по запросу не найдены'.
+    """
+    
+    print_title('Поиск записей', style=2)
+    records = read_db()
+    if records:
+        search_request = get_user_data('Введите имя или фамилию: ')
+        search_result = find_records(records, search_request)
+        if search_result:
+            print_title('Найдены записи:', style=2)
+            for index in search_result:
+                print(f'  {index + 1}: {records[index]}', end='') 
+        else:
+            print(f'Записи по запросу "{search_request}" не найдены')
+    else:
+        print('Справочник пуст', '\n')
+    input('Для продолжения нажмите Enter...')
 
 
 def edit_menu():
-    pass
+    input('Для продолжения нажмите Enter...')
+
 
 def delete_menu():
-    pass
+    input('Для продолжения нажмите Enter...')
+
 
 if __name__ == "__main__":
     ui()
